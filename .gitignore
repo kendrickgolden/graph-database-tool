@@ -1,0 +1,14 @@
+build/
+out/
+
+hs_err_pid*.log
+*.log
+
+.venv/
+venv/
+env/
+
+.vscode/
+
+.DS_Store
+Thumbs.db
