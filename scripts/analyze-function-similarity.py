@@ -1,6 +1,6 @@
 
-import sys
-print(sys.executable)
+#import sys
+#print(sys.executable)
 
 from neo4j import GraphDatabase
 from itertools import combinations
@@ -58,10 +58,21 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
 
 
     #look at every non-identical pair of functions and return those with Jaccard similiarty score greater than 0.5
-    for f1, f2 in combinations(functions.keys(), 2):
-            sim = multiset_jaccard(functions[f1], functions[f2])
-            if sim >= 0.0:  # threshold for "high similarity"
-                print(f"{f1} ~ {f2}: {sim:.2f}")
+    with driver.session() as session:
+        for f1, f2 in combinations(functions.keys(), 2):
+                sim_score = multiset_jaccard(functions[f1], functions[f2])
+                print(f"{f1} ~ {f2}: {sim_score:.2f}")
+
+                if sim_score >= 0.0:  # adjustable value (0.5 seems to be optimal)
+                    #create relationship between two functions and attach similarity score to relationship
+                    query = f"""
+                    MATCH (f1:FunctionDeclaration {{name: '{f1}'}}),
+                        (f2:FunctionDeclaration {{name: '{f2}'}})
+                    MERGE (f1)-[r:SIMILAR_TO]->(f2)
+                    SET r.similarity = {sim_score}
+                    """
+                    session.run(query)
+
 
     # Summary information
     """  print("The query `{query}` returned {records_count} records in {time} ms.".format(
