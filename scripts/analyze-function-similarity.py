@@ -103,7 +103,10 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
             if i >= j:
                 continue
             jaccard_score = multiset_jaccard(functions[f1], functions[f2])
-            tfidf_score = tfidf_matrix[i, j] if tfidf_matrix is not None else 0
+            if tfidf_matrix is not None: 
+                tfidf_score = tfidf_matrix[i, j]
+            else:
+                tfidf_score = 0
 
             similarities[(f1, f2)] = (jaccard_score, tfidf_score)
     adjacency = defaultdict(set)
