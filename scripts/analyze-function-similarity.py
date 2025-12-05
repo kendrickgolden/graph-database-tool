@@ -72,8 +72,6 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
     """,
     database_="neo4j",
     )
-
-
     
     functions = {}
     call_graph = {}
@@ -136,7 +134,6 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                 groups[func] = -1
                 visited.add(func)
 
-
     with driver.session() as session:
         # Write group IDs
         for func, gid in groups.items():
@@ -164,7 +161,6 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                     t=tfidf_score
                 )
                        
-
     # Summary information
     """  print("The query `{query}` returned {records_count} records in {time} ms.".format(
         query=summary.query, records_count=len(records),
